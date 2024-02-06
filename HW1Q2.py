@@ -4,6 +4,7 @@ from scipy.stats import multivariate_normal
 from scipy.optimize import minimize_scalar
 import matplotlib.pyplot as plt
 from sklearn.metrics import roc_curve, auc
+from scipy.integrate import nquad
 
 # Setting the parameters for the Gaussian distributions and class priors
 n_samples = 10000  # Total number of samples
@@ -17,6 +18,12 @@ C1 = np.array([[1.6, -0.5, -1.5, -1.2], [-0.5, 8, 6, -1.7], [-1.5, 6, 6, 0],
 
 # Initializing random seed for reproducibility
 np.random.seed(0)
+
+# Defining the error function
+def errorFn(x1, x2, x3, x4):
+    x = [x1, x2, x3, x4]
+    return min(multivariate_normal.pdf(x, mean=m0, cov=C0) * P_L0,
+               multivariate_normal.pdf(x, mean=m1, cov=C1) * P_L1)
 
 # Defining a function for likelihood ratio
 def likelihood_ratio(samples, m0, C0, m1, C1, gamma):
@@ -88,6 +95,13 @@ optimal_gamma = result.x
 min_error = result.fun
 print("Optimal Gamma:", optimal_gamma)
 print("Minimum Empirical Error:", min_error)
+
+# Integration options
+opts = {'epsabs': 1.e-2}
+
+# Numerical integration over the feature space
+#error, _ = nquad(errorFn, ranges=[[-5, 5], [-5, 5], [-5, 5], [-5, 5]], opts=opts)
+#print("Numerical Minimum Error Rate:", error)
 
 # PART B
 
@@ -180,7 +194,7 @@ print(f"Minimum Empirical Error (Diagonal): {min_error_diagonal:.4f}")
 
 # PART D
 
-# Separate the samples by class
+# Separating the samples by class
 samples_0 = samples[labels == 0]
 samples_1 = samples[labels == 1]
 
