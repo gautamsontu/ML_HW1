@@ -148,6 +148,11 @@ print(f"Bhattacharyya Bound (Beta = 0.5): {bhattacharyya_bound:.4f}")
 C0_diagonal = np.diag(np.diag([[5, 3, 1, -1], [3, 5, -2, -2], [1, -2, 6, 3], [-1, -2, 3, 4]]))
 C1_diagonal = np.diag(np.diag([[1.6, -0.5, -1.5, -1.2], [-0.5, 8, 6, -1.7], [-1.5, 6, 6, 0], [-1.2, -1.7, 0, 1.8]]))
 
+print("Adjusted Diagonal Covariance Matrix for Class 0 (C0_diagonal):")
+print(C0_diagonal)
+print("\nAdjusted Diagonal Covariance Matrix for Class 1 (C1_diagonal):")
+print(C1_diagonal)
+
 # Computing likelihood ratios for all samples using diagonal covariance matrices
 _, likelihood_ratios_diagonal = likelihood_ratio(samples, m0, C0_diagonal, m1, C1_diagonal, gamma=1)
 
